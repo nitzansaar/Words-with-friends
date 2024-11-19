@@ -1,9 +1,9 @@
 /*
  * Nitzan Saar
  */
-import java.util.HashMap;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class WordFinder {
     public static void main(String[] args) {
@@ -44,10 +44,20 @@ public class WordFinder {
 
             System.out.println("We can make " + validWords.size() + " words from \"" + input + "\"");
 
-            System.out.println("All of the words (sorted):");
-            java.util.Collections.sort(validWords);
+            System.out.println("All of the words (sorted by score):");
+            // Sort words by score (highest to lowest) and then alphabetically
+            Collections.sort(validWords, (a, b) -> {
+                int scoreA = ScoreTable.getScore(a);
+                int scoreB = ScoreTable.getScore(b);
+                if (scoreA != scoreB) {
+                    return scoreB - scoreA;  // Higher scores first
+                }
+                return a.compareTo(b);       // Alphabetical for same score
+            });
+            
             for (String word : validWords) {
-                System.out.println(word);
+                int score = ScoreTable.getScore(word);
+                System.out.println(score + ": " + word);
             }
             
             System.out.println("\nEnter another string (or '.' to exit):");
