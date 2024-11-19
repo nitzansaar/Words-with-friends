@@ -7,12 +7,15 @@ import java.util.ArrayList;
 
 public class WordFinder {
     public static void main(String[] args) {
+        if (args.length == 0) {
+            args = new String[]{"sowpods.txt"};
+        }
         String dict = args[0];
         HashMap<String,ArrayList<String>> hash = new HashMap<>();
         preprocess(dict, hash);
         // now we have a hashmap with the stored anagrams
         java.util.Scanner scanner = new java.util.Scanner(System.in);
-        System.out.println("\nRack? ");
+        System.out.print("\nRack? ");
         
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine().trim();
@@ -20,32 +23,39 @@ public class WordFinder {
             if (input.equals(".")) {
                 break;
             }
-            
-            // Convert input to char array, sort it, and convert back to string to use as key
-            char[] inputChars = input.toCharArray();
-            java.util.Arrays.sort(inputChars);
-            String sortedInput = new String(inputChars);
-            
-            // Look up anagrams in hashmap
-            
-            ArrayList<String> anagrams = hash.get(sortedInput);
-            int numAnagrams = 0;
-            if (anagrams != null) {
-                numAnagrams = anagrams.size();
+
+            Rack rack = new Rack(input);
+            ArrayList<String> subsets = rack.getAllSubsets(hash);
+
+            System.out.println("We can make " + subsets.size() + " words from \"" + input + "\"");
+
+            System.out.println("All of the words (sorted):");
+            java.util.Collections.sort(subsets);
+            for (String subset : subsets) {
+                System.out.println(subset);
             }
-            System.out.println("\nWe can make " + numAnagrams + " words from \"" + input + "\"");
-            if (numAnagrams > 0) {
-                System.out.println("All of the words (sorted):");
-                java.util.Collections.sort(anagrams);
-            }
-            if (anagrams != null && !anagrams.isEmpty()) {
-                System.out.println("\nAll of the words but not with their score yet");
-                for (String anagram : anagrams) {
-                    System.out.println(anagram);
-                }
-            } else {
-                System.out.println("\nNo anagrams found for '" + input + "'");
-            }
+            
+            // // Convert input to char array, sort it, and convert back to string to use as key
+            // char[] inputChars = input.toCharArray();
+            // java.util.Arrays.sort(inputChars);
+            // String sortedInput = new String(inputChars);
+            
+            // // Look up anagrams in hashmap
+            
+            // ArrayList<String> anagrams = hash.get(sortedInput);
+            // int numAnagrams = 0;
+            // if (anagrams != null) {
+            //     numAnagrams = anagrams.size();
+            // }c
+
+            // if (anagrams != null && !anagrams.isEmpty()) {
+            //     // System.out.println("\nAll of the words but not with their score yet");
+            //     for (String anagram : anagrams) {
+            //         System.out.println(anagram);
+            //     }
+            // } else {
+            //     System.out.println("\nNo anagrams found for '" + input + "'");
+            // }
             
             System.out.println("\nEnter another string (or '.' to exit):");
         }
@@ -57,7 +67,7 @@ public class WordFinder {
         System.out.println("Your dictionary is " + dict);
         // read through file and create sets based on sorted versions of words
         /*
-         * Possible hashmap implementation where the key is the sorted word
+         * hashmap implementation where the key is the sorted word
          * and the value is an arraylist of the words
          */
         try {
@@ -85,13 +95,6 @@ public class WordFinder {
             System.err.println("Error reading dictionary file: " + e.getMessage());
             System.exit(1);
         }
-        // // Print out hashmap contents for testing
-        // System.out.println("\nHashmap contents:");
-        // for (String key : hash.keySet()) {
-        //     if (hash.get(key).size() >= 3) { // just to test functionality
-        //         System.out.println("Key: " + key + " -> Values: " + hash.get(key));
-        //     }
-        // }
 
     }
 }
