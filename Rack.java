@@ -23,39 +23,23 @@ public class Rack {
     * @param dictionary HashMap containing valid words (sorted characters as key, list of words as value)
     * @return ArrayList<String> containing all valid words that can be made from the rack
     */
-   public ArrayList<String> getAllSubsets(HashMap<String,ArrayList<String>> dictionary) {
-      // Create string of unique chars and array of their multiplicities
-      StringBuilder unique = new StringBuilder();
-      ArrayList<Character> seen = new ArrayList<>();
-      int[] mult = new int[26]; // max possible unique letters
-      
-      // Count occurrences of each character
-      for (char c : rack.toCharArray()) {
-         if (!seen.contains(c)) {
-            seen.add(c);
-            unique.append(c);
-         }
-         mult[seen.indexOf(c)]++;
-      }
-      
-      // Get all possible letter combinations
-      ArrayList<String> allCombos = allSubsets(unique.toString(), mult, 0);
-      ArrayList<String> validWords = new ArrayList<>();
-      
-      // Filter for valid words
-      for (String combo : allCombos) {
-         if (!combo.isEmpty()) {  // Skip empty string
-            char[] chars = combo.toCharArray();
-            java.util.Arrays.sort(chars);
-            String sorted = new String(chars);
-            
-            if (dictionary.containsKey(sorted)) {
-               validWords.addAll(dictionary.get(sorted));
-            }
-         }
-      }
-      
-      return validWords;
+   public ArrayList<String> getAllSubsets() {
+       // Create string of unique chars and array of their multiplicities
+       StringBuilder unique = new StringBuilder();
+       ArrayList<Character> seen = new ArrayList<>();
+       int[] mult = new int[26]; // max possible unique letters
+       
+       // Count occurrences of each character
+       for (char c : rack.toCharArray()) {
+          if (!seen.contains(c)) {
+             seen.add(c);
+             unique.append(c);
+          }
+          mult[seen.indexOf(c)]++;
+       }
+       
+       // Get all possible letter combinations
+       return allSubsets(unique.toString(), mult, 0);
    }
 
 
