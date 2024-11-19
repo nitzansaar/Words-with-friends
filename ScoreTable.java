@@ -1,3 +1,7 @@
+// Name: Nitzan Saar
+// USC NetID: 8106373693
+// CS 455 PA4
+// Fall 2024
 import java.util.HashMap;
 
 public class ScoreTable {
