@@ -30,7 +30,6 @@ public class AnagramDictionary {
    public AnagramDictionary(String fileName) throws FileNotFoundException,
                                                     IllegalDictionaryException {
       anagramMap = new HashMap<>();
-      
       try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
          String line;
          while ((line = reader.readLine()) != null) {
@@ -48,7 +47,8 @@ public class AnagramDictionary {
             
             // Check for duplicates
             if (anagrams.contains(line)) {
-               throw new IllegalDictionaryException("Duplicate word found: " + line);
+               System.out.println("ERROR: Illegal dictionary: dictionary file has a duplicate word: " + line);
+               throw new IllegalDictionaryException("ERROR: Illegal dictionary: dictionary file has a duplicate word:" + line);
             }
             
             // Add original word to list of anagrams

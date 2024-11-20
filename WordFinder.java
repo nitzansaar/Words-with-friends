@@ -11,20 +11,23 @@ public class WordFinder {
         if (args.length == 0) {
             args = new String[]{"sowpods.txt"};
         }
-        String dict = args[0];
         AnagramDictionary anagramDict = null;
-        
         try {
+            String dict = args[0];
             anagramDict = new AnagramDictionary(dict);
-            System.out.println("Your dictionary is " + dict);
-        } catch (FileNotFoundException | IllegalDictionaryException e) {
-            System.err.println("Dictionary file not found: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.out.println("Exiting program.");
             System.exit(1);
-        }    
+        } catch (IllegalDictionaryException e) {
+            System.out.println("Invalid dictionary format: " + args[0]);
+            System.exit(1);
+        }
+
         
         java.util.Scanner scanner = new java.util.Scanner(System.in);
-        System.out.print("\nRack? ");
-        
+        // System.out.print("Rack? ");
+        System.out.println("Type . to quit.");
+        System.out.print("Rack? ");
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine().trim();
             
@@ -42,11 +45,8 @@ public class WordFinder {
                     validWords.addAll(anagrams);
                 }
             }
-
-            System.out.println("We can make " + validWords.size() + " words from \"" + input + "\"");
-
-            System.out.println("All of the words (sorted by score):");
-            // Sort words by score (highest to lowest) and then alphabetically
+            // Remove words with score 0 and sort remaining by score (highest to lowest) and alphabetically
+            validWords.removeIf(word -> ScoreTable.getScore(word) == 0);
             Collections.sort(validWords, (a, b) -> {
                 int scoreA = ScoreTable.getScore(a);
                 int scoreB = ScoreTable.getScore(b);
@@ -55,15 +55,24 @@ public class WordFinder {
                 }
                 return a.compareTo(b);       // Alphabetical for same score
             });
-            
+            System.out.println("We can make " + validWords.size() + " words from \"" + input + "\"");
+            System.out.println(validWords.size());
+           if (validWords.size() > 1) {
+              System.out.println("All of the words with their scores (sorted by score):");
+
+           }
+            int count = 0;
             for (String word : validWords) {
                 int score = ScoreTable.getScore(word);
-                System.out.println(score + ": " + word);
+                if (score > 0) {
+                    System.out.println(score + ": " + word);
+                    count++;
+                }
             }
-            
-            System.out.println("\nEnter another string (or '.' to exit):");
+            System.out.println(count);
+            System.out.print("Rack? ");
+            // System.out.println("Enter another string (or '.' to exit):");
         }
-        
         scanner.close();
     }
 }
